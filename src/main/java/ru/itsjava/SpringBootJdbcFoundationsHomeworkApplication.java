@@ -1,6 +1,5 @@
 package ru.itsjava;
 
-import org.h2.tools.Console;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.ApplicationContext;
@@ -8,6 +7,7 @@ import ru.itsjava.dao.UserDao;
 import ru.itsjava.domain.User;
 
 import java.sql.SQLException;
+import java.util.List;
 
 @SpringBootApplication
 public class SpringBootJdbcFoundationsHomeworkApplication {
@@ -31,7 +31,17 @@ public class SpringBootJdbcFoundationsHomeworkApplication {
         userDao.delete(updateUser);
         System.out.println("Количество пользователей = " + userDao.count());
 
-        Console.main(args);
+        System.out.println("userDao.findById(2L) = " + userDao.findById(2L));
+
+        List<User> allUsers = userDao.listUsers();
+
+        for (User record : allUsers) {
+            System.out.print("ID: " + record.getId());
+            System.out.print(", Name: " + record.getName());
+            System.out.println(", Age: " + record.getAge());
+        }
+
+//        Console.main(args);
     }
 
 }
