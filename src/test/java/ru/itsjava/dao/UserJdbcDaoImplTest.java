@@ -1,11 +1,14 @@
 package ru.itsjava.dao;
 
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.jdbc.JdbcTest;
 import org.springframework.context.annotation.Import;
+import ru.itsjava.domain.Pet;
 import ru.itsjava.domain.User;
 
+import static org.junit.jupiter.api.Assertions.assertAll;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 @JdbcTest
@@ -13,38 +16,45 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 public class UserJdbcDaoImplTest {
     private static final String DEFAULT_NAME = "TANOS";
     private static final int DEFAULT_AGE = 100000;
+    private static final Pet DEFAULT_PET = new Pet(1L, "Dog");
 
     @Autowired
     private UserDao userDao;
 
+    @DisplayName("корректный метод учёта количества пользователей")
     @Test
     public void shouldHaveCorrectCount() {
-        int actualStudentsCount = userDao.count();
-        assertEquals(2, actualStudentsCount);
+        int actualUsersCount = userDao.count();
+        assertEquals(2, actualUsersCount);
     }
 
+    @DisplayName("корректный метод добавления пользователя в БД")
     @Test
     public void shouldHaveCorrectInsert() {
-        User expectedStudent = new User(3L, DEFAULT_NAME, DEFAULT_AGE);
-        userDao.create(expectedStudent);
-        User actualStudent = userDao.findById(3L);
+        User expectedUser = new User(DEFAULT_NAME, DEFAULT_AGE, DEFAULT_PET);
+        long idFromDB = userDao.create(expectedUser);
+        System.out.println(idFromDB);
+        User actualUser = userDao.findById(idFromDB);
 
-        assertEquals(expectedStudent, actualStudent);
+        assertAll(() -> assertEquals(expectedUser.getName(), actualUser.getName()),
+                () -> assertEquals(expectedUser.getAge(), actualUser.getAge()));
     }
 
+    @DisplayName("корректный метод обновления пользователя")
     @Test
     public void shouldHaveCorrectUpdate() {
-        User expectedStudent = new User(1L, DEFAULT_NAME, DEFAULT_AGE);
-        userDao.update(expectedStudent);
-        User actualStudent = userDao.findById(1L);
+        User expectedUser = new User(1L, DEFAULT_NAME, DEFAULT_AGE,DEFAULT_PET);
+        userDao.update(expectedUser);
+        User actualUser = userDao.findById(1L);
 
-        assertEquals(expectedStudent, actualStudent);
+        assertEquals(expectedUser, actualUser);
     }
 
+    @DisplayName("корректный метод удаления пользователя")
     @Test
     public void shouldHaveCorrectDelete() {
-        User deleteStudent = userDao.findById(1L);
-        userDao.delete(deleteStudent);
+        User deleteUser = userDao.findById(1L);
+        userDao.delete(deleteUser);
 
         assertEquals(userDao.count(), 1);
     }
