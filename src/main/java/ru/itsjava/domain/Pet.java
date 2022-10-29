@@ -10,4 +10,10 @@ import lombok.RequiredArgsConstructor;
 public class Pet {
     private long id;
     private final String breed;
+
+
+    @Override
+    public String toString() {
+        return "id: " + id + ", питомец: " + breed;
+    }
 }

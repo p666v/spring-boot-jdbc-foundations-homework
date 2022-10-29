@@ -5,7 +5,6 @@ CREATE TABLE users(
     name VARCHAR(256),
     age INT,
     pet_id BIGINT
---    FOREIGN KEY (pet_id) REFERENCES pets (id)
 );
 
 

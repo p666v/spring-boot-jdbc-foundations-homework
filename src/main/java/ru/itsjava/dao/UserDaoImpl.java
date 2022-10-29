@@ -59,8 +59,7 @@ public class UserDaoImpl implements UserDao {
 
     @Override
     public List<User> listUsers() {
-        List<User> users = jdbc.getJdbcOperations().query("select id, name, age from users", new UsersMapper());
-        return users;
+        return jdbc.getJdbcOperations().query("select us.id, name, age, p.id, breed from users us, pets p where us.pet_id = p.id", new UsersMapper());
     }
 
     private static class UsersMapper implements RowMapper<User> {
